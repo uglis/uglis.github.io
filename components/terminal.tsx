@@ -172,6 +172,101 @@ Tips:
   - Use .. to go up a directory
   - Try: vim about.md | cd posts/ | ls -la`;
 
+function seededRandom(seed: number) {
+  let s = seed;
+  return () => {
+    s = (s * 16807) % 2147483647;
+    return (s - 1) / 2147483646;
+  };
+}
+
+function ContributionGraph() {
+  const weeks = 27;
+  const days = 7;
+  const dayLabels = ["", "Mon", "", "Wed", "", "Fri", ""];
+  const greenShades = [
+    "bg-[#161b22]",
+    "bg-[#0e4429]",
+    "bg-[#006d32]",
+    "bg-[#26a641]",
+    "bg-[#39d353]",
+  ];
+
+  const rng = seededRandom(20050110);
+  const grid: number[][] = [];
+  for (let w = 0; w < weeks; w++) {
+    const col: number[] = [];
+    for (let d = 0; d < days; d++) {
+      const age = weeks - w;
+      let v = Math.random();
+      if (rng() < 0.18) {
+        col.push(0);
+      } else {
+        const bias = age < 8 ? 0.35 : age < 18 ? 0.15 : 0;
+        col.push(Math.floor((v + bias) * 5));
+      }
+    }
+    grid.push(col);
+  }
+
+  const monthPositions = [
+    { w: 0, label: "Sep" },
+    { w: 4, label: "Oct" },
+    { w: 9, label: "Nov" },
+    { w: 13, label: "Dec" },
+    { w: 17, label: "Jan" },
+    { w: 22, label: "Feb" },
+    { w: 26, label: "Mar" },
+  ];
+
+  return (
+    <div className="mt-2">
+      <div className="text-xs text-muted mb-1">
+        <span className="text-accent-green">contributions</span> in the last half year
+      </div>
+      <div className="flex gap-[2px]">
+        {dayLabels.map((label, i) => (
+          <div key={`day-${i}`} className="text-[10px] text-[#484f58] w-[15px] text-right pr-0.5 leading-[11px]">
+            {label}
+          </div>
+        ))}
+        <div className="flex gap-[2px] ml-0.5">
+          {grid.map((col, w) => (
+            <div key={w} className="flex flex-col gap-[2px]">
+              {col.map((level, d) => (
+                <div
+                  key={`${w}-${d}`}
+                  className={`w-[11px] h-[11px] ${greenShades[level] || greenShades[0]}`}
+                  title={`${level} contributions`}
+                />
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="flex gap-[2px] mt-0.5">
+        <div className="w-[15px]" />
+        {monthPositions.map((m) => (
+          <div
+            key={m.label}
+            className="text-[10px] text-[#484f58]"
+            style={{ marginLeft: m.w === 0 ? 0 : `${m.w * 13 - (monthPositions[monthPositions.indexOf(m) - 1]?.w || 0) * 13}px` }}
+          >
+            {m.label}
+          </div>
+        ))}
+      </div>
+      <div className="flex items-center gap-1 mt-1 text-[10px] text-[#484f58]">
+        <span>Less</span>
+        {greenShades.map((shade, i) => (
+          <div key={i} className={`w-[11px] h-[11px] ${shade}`} />
+        ))}
+        <span>More</span>
+      </div>
+    </div>
+  );
+}
+
 function NeoFetch() {
   const now = new Date();
   const uptime = Math.floor(
@@ -228,6 +323,8 @@ function NeoFetch() {
           />
         ))}
       </div>
+
+      <ContributionGraph />
     </div>
   );
 }
