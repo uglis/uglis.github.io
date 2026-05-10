@@ -172,16 +172,6 @@ Tips:
   - Use .. to go up a directory
   - Try: vim about.md | cd posts/ | ls -la`;
 
-const NEOF_LOGO = [
-  "       ▲        ",
-  "      ╱█╲       ",
-  "     ╱ █ ╲      ",
-  "    ╱  █  ╲     ",
-  "   ┌──────────┐  ",
-  "   │ ████████ │  ",
-  "   └──────────┘  ",
-];
-
 function NeoFetch() {
   const now = new Date();
   const uptime = Math.floor(
@@ -210,54 +200,26 @@ function NeoFetch() {
 
   return (
     <div className="font-mono text-xs leading-snug">
-      {/* Header: logo + user@host */}
-      <div className="flex gap-4">
-        <div className="text-accent shrink-0 leading-tight">
-          {NEOF_LOGO.map((line, i) => (
-            <div key={i} className="whitespace-pre">{line}</div>
-          ))}
-        </div>
-        <div>
-          <div>
-            <span className="text-accent-green font-bold">uglis</span>
-            <span className="text-accent">@</span>
-            <span className="text-accent-green font-bold">home</span>
-          </div>
-          <div className="text-muted">
-            {"─".repeat(maxLabelLen + 12)}
-          </div>
-        </div>
+      <div>
+        <span className="text-accent-green font-bold">uglis</span>
+        <span className="text-accent">@</span>
+        <span className="text-accent-green font-bold">home</span>
+      </div>
+      <div className="text-muted">
+        {"─".repeat(maxLabelLen + 12)}
       </div>
 
-      {/* Info lines: logo left, info right */}
       {info.map((item, i) => (
-        <div key={i} className="flex mt-0.5">
-          <div className="text-accent shrink-0 leading-tight w-[72px]">
-            {NEOF_LOGO[i] ? (
-              <span className="whitespace-pre">{NEOF_LOGO[i]}</span>
-            ) : (
-              <span className="whitespace-pre">{' '.repeat(13)}</span>
-            )}
-          </div>
-          <div>
-            <span className="text-accent font-bold">
-              {item.label.padStart(maxLabelLen)}
-            </span>
-            <span className="text-muted">: </span>
-            <span className="text-text">{item.value}</span>
-          </div>
+        <div key={i} className="mt-0.5">
+          <span className="text-accent font-bold">
+            {item.label.padStart(maxLabelLen)}
+          </span>
+          <span className="text-muted">: </span>
+          <span className="text-text">{item.value}</span>
         </div>
       ))}
 
-      {/* Remaining logo lines */}
-      {NEOF_LOGO.slice(info.length).map((line, i) => (
-        <div key={`logo-${i}`} className="flex leading-tight">
-          <span className="text-accent whitespace-pre">{line}</span>
-        </div>
-      ))}
-
-      {/* Color blocks */}
-      <div className="flex gap-0.5 mt-2 ml-[72px]">
+      <div className="flex gap-0.5 mt-2">
         {colorBlocks.map((color, i) => (
           <span
             key={i}
