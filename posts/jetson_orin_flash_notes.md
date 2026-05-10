@@ -1,7 +1,7 @@
 ---
-title: Jetson AGX Orin / Orin2 刷机排障记录
+title: Jetson AGX Orin 刷机排障记录
 date: 2026-05-10
-summary: 整理 Jetson AGX Orin/Orin2 开机、Force Recovery、SDK Manager 刷机和 Target Components 安装排障的操作记录，涵盖 USB 通信超时、SSH 连接失败、System Configuration 卡住、APT 锁占用等常见问题。
+summary: 整理 Jetson AGX Orin 开机、Force Recovery、SDK Manager 刷机和 Target Components 安装排障的操作记录，涵盖 USB 通信超时、SSH 连接失败、System Configuration 卡住、APT 锁占用等常见问题。
 slug: jetson-orin-flash-notes
 tags:
   - Jetson
@@ -11,9 +11,7 @@ tags:
   - 嵌入式
 ---
 
-# Jetson AGX Orin / Orin2 刷机排障记录
-
-本文整理本次对话中关于 Jetson AGX Orin / Orin2 开机、Force Recovery、SDK Manager 刷机和 Target Components 安装排障的操作记录。
+本文整理本次对话中关于 Jetson AGX Orin 开机、Force Recovery、SDK Manager 刷机和 Target Components 安装排障的操作记录。
 
 ## 1. 板子按键含义
 
