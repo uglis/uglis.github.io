@@ -1,0 +1,106 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@custom-variant light (&:where([data-theme="light"], [data-theme="light"] *));
+
+@theme {
+  --color-bg: #07080c;
+  --color-bg-start: #16213f;
+  --color-bg-end: #10293a;
+  --color-surface: rgba(12, 15, 24, 0.78);
+  --color-line: rgba(164, 190, 255, 0.22);
+  --color-text: #e8edff;
+  --color-muted: #9ca8c8;
+  --color-accent: #7bc7ff;
+  --color-accent-2: #8affc1;
+  --font-sans: "Sora", sans-serif;
+  --font-serif: "Noto Serif SC", serif;
+}
+
+[data-theme="light"] {
+  --color-bg: #f8fbff;
+  --color-bg-start: #e9f0ff;
+  --color-bg-end: #fff7ef;
+  --color-surface: rgba(255, 255, 255, 0.93);
+  --color-line: rgba(116, 137, 184, 0.22);
+  --color-text: #1f2a44;
+  --color-muted: #6f7d9d;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--color-text);
+  background:
+    radial-gradient(circle at 12% 8%, var(--color-bg-start) 0%, transparent 33%),
+    radial-gradient(circle at 88% 92%, var(--color-bg-end) 0%, transparent 30%),
+    var(--color-bg);
+  overflow-x: hidden;
+}
+
+.bg-grid {
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(123, 199, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(123, 199, 255, 0.08) 1px, transparent 1px);
+  background-size: 36px 36px;
+  mask-image: radial-gradient(circle at center, black 45%, transparent 100%);
+  pointer-events: none;
+  z-index: -3;
+}
+
+.bg-radial {
+  position: fixed;
+  width: 560px;
+  height: 560px;
+  right: -120px;
+  top: -80px;
+  background: radial-gradient(circle, rgba(138, 255, 193, 0.18), transparent 70%);
+  filter: blur(12px);
+  pointer-events: none;
+  z-index: -2;
+}
+
+.article-image {
+  @apply block w-full rounded-xl my-3 object-contain bg-black/80;
+  max-height: min(70vh, 680px);
+}
+
+[data-theme="light"] .article-image {
+  background: #ffffff;
+}
+
+.article-content h1, .article-content h2, .article-content h3,
+.article-content h4, .article-content h5, .article-content h6 {
+  @apply my-4 leading-tight;
+}
+.article-content p { @apply text-muted leading-relaxed mb-3; }
+.article-content blockquote {
+  @apply my-3 pl-3 border-l-2 border-accent/50 text-[#c7d4f6];
+}
+.article-content code {
+  @apply font-mono text-sm px-1.5 py-0.5 rounded-md bg-[rgba(17,26,44,0.8)] text-[#d7edff];
+}
+.article-content pre {
+  @apply my-3 p-3 rounded-xl border border-line bg-[rgba(8,12,20,0.9)] overflow-x-auto;
+}
+.article-content pre code { @apply p-0 bg-transparent; }
+.article-content ul, .article-content ol {
+  @apply my-2 mb-3 text-muted leading-relaxed ml-5;
+}
+.article-content li { @apply my-1; }
+.article-content hr { @apply border-0 border-t border-line my-4; }
