@@ -1,12 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import type { Post } from "@/lib/posts";
 import type { Moment } from "@/lib/moments";
 
 interface OutputLine {
   type: "command" | "output" | "error";
-  content: string;
+  content: ReactNode;
 }
 
 type VNode = VFile | VDir;
@@ -172,20 +172,45 @@ Tips:
 
 function NeoFetch() {
   const now = new Date();
-  return `${BANNER}
-  ┌──────────────────────────────────┐
-  │  uglis@home                      │
-  │  ─────────────────────────────── │
-  │  OS: NJU CS Undergraduate '27    │
-  │  Shell: /bin/zsh                 │
-  │  Uptime: ${Math.floor((now.getTime() - new Date("2005-01-10").getTime()) / 31556952000)} years        │
-  │  Location: Nanjing, China        │
-  │  Editor: VS Code / Vim           │
-  │  Languages: C, Python, Go, TS    │
-  │  MBTI: INFP                      │
-  │  Hobbies: 书法, 阅读              │
-  └──────────────────────────────────┘
-  ${["🟦", "🟩", "🟨", "🟥", "🟪", "🟧", "⬛", "⬜"].join(" ")}`;
+  const uptime = Math.floor(
+    (now.getTime() - new Date("2005-01-10").getTime()) / 31556952000
+  );
+
+  const colorBlocks = [
+    "#0d1117", "#161b22", "#30363d", "#484f58", "#6e7681",
+    "#8b949e", "#e6edf3", "#ffffff",
+    "#f85149", "#d29922", "#3fb950", "#58a6ff",
+    "#a371f7", "#db61a2", "#f0883e", "#2ea043",
+  ];
+
+  return (
+    <div className="font-mono text-xs leading-tight">
+      <pre className="text-accent-green my-1">{BANNER}</pre>
+      <div className="my-1">
+        <div>  ┌──────────────────────────────────┐</div>
+        <div>  │  <span className="text-accent-green">uglis@home</span>                      │</div>
+        <div>  │  ─────────────────────────────── │</div>
+        <div>  │  OS: NJU CS Undergraduate &apos;27    │</div>
+        <div>  │  Shell: /bin/zsh                 │</div>
+        <div>  │  Uptime: {uptime} years                  │</div>
+        <div>  │  Location: Nanjing, China        │</div>
+        <div>  │  Editor: VS Code / Vim           │</div>
+        <div>  │  Languages: C, Python, Go, TS    │</div>
+        <div>  │  MBTI: INFP                      │</div>
+        <div>  │  Hobbies: 书法, 阅读              │</div>
+        <div>  └──────────────────────────────────┘</div>
+      </div>
+      <div className="flex gap-0.5 mt-1">
+        {colorBlocks.map((color, i) => (
+          <span
+            key={i}
+            className="w-3 h-3 inline-block rounded-sm"
+            style={{ backgroundColor: color }}
+          />
+        ))}
+      </div>
+    </div>
+  );
 }
 
 function autocomplete(cwd: string, input: string, fs: Record<string, VNode>): string | null {
@@ -492,11 +517,6 @@ export function Terminal({
             )}
             {line.type === "error" && (
               <div className="text-accent-red">{line.content}</div>
-            )}
-            {line.type === "command" && i === lines.length - 1 && (
-              <div className="text-accent-red hidden">
-                {line.content}
-              </div>
             )}
           </div>
         ))}
