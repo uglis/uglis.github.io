@@ -258,23 +258,16 @@ function ContributionGraph({
       </div>
 
       {/* Month labels row */}
-      <div className="flex" style={{ marginLeft: "19px" }}>
-        {monthMarks.map((m, i) => {
-          const prevW = i > 0 ? monthMarks[i - 1].weekIdx : 0;
-          const offset = (m.weekIdx - prevW) * 13;
-          return (
-            <div
-              key={m.label}
-              className="text-[10px] text-[#484f58] shrink-0"
-              style={{
-                width: i === 0 ? "auto" : `${offset}px`,
-                marginLeft: i === 0 ? "0" : undefined,
-              }}
-            >
-              {m.label}
-            </div>
-          );
-        })}
+      <div className="text-[10px] text-[#484f58] relative h-[14px]" style={{ marginLeft: "32px" }}>
+        {monthMarks.map((m) => (
+          <div
+            key={m.label}
+            className="absolute"
+            style={{ left: `${m.weekIdx * 13}px` }}
+          >
+            {m.label}
+          </div>
+        ))}
       </div>
 
       {/* Grid + day labels */}
