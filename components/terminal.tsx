@@ -205,17 +205,27 @@ function ContributionGraph({
     "bg-[#39d353]",
   ];
 
-  const now = new Date();
-  const totalWeeks = 20;
   const msPerDay = 86400000;
 
-  // Find Sunday of the first week
-  const endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const startDate = new Date(
-    endDate.getTime() - (totalWeeks * 7 - 1) * msPerDay
-  );
-  // Align start to Sunday
+  // Start from first day of earliest data month, but go back at least 16 weeks
+  const now = new Date();
+  let earliest: Date | null = null;
+  for (const key of contributions.keys()) {
+    const d = new Date(key + "T00:00:00");
+    if (!earliest || d < earliest) earliest = d;
+  }
+  const dataStart = earliest
+    ? new Date(earliest.getFullYear(), earliest.getMonth(), 1)
+    : new Date(now.getFullYear(), now.getMonth() - 3, 1);
+  // Ensure at least 16 weeks shown
+  const minStart = new Date(now.getTime() - 16 * 7 * msPerDay);
+  const startDate = dataStart < minStart ? dataStart : minStart;
+  // Align to Sunday
   startDate.setDate(startDate.getDate() - startDate.getDay());
+  const endDate = now;
+  const totalWeeks = Math.ceil(
+    (endDate.getTime() - startDate.getTime()) / (7 * msPerDay)
+  );
 
   const dayLabels = ["", "Mon", "", "Wed", "", "Fri", ""];
 
