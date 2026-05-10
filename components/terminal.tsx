@@ -172,18 +172,31 @@ Tips:
   - Use .. to go up a directory
   - Try: vim about.md | cd posts/ | ls -la`;
 
-function seededRandom(seed: number) {
-  let s = seed;
-  return () => {
-    s = (s * 16807) % 2147483647;
-    return (s - 1) / 2147483646;
-  };
+function buildContributions(
+  posts: Post[],
+  moments: Moment[]
+): Map<string, number> {
+  const map = new Map<string, number>();
+  for (const p of posts) {
+    if (p.date) {
+      const d = p.date.slice(0, 10);
+      map.set(d, Math.min((map.get(d) || 0) + 2, 4));
+    }
+  }
+  for (const m of moments) {
+    if (m.date) {
+      const d = m.date.slice(0, 10);
+      map.set(d, Math.min((map.get(d) || 0) + 1, 4));
+    }
+  }
+  return map;
 }
 
-function ContributionGraph() {
-  const weeks = 27;
-  const days = 7;
-  const dayLabels = ["", "Mon", "", "Wed", "", "Fri", ""];
+function ContributionGraph({
+  contributions,
+}: {
+  contributions: Map<string, number>;
+}) {
   const greenShades = [
     "bg-[#161b22]",
     "bg-[#0e4429]",
@@ -192,70 +205,105 @@ function ContributionGraph() {
     "bg-[#39d353]",
   ];
 
-  const rng = seededRandom(20050110);
+  const now = new Date();
+  const totalWeeks = 20;
+  const msPerDay = 86400000;
+
+  // Find Sunday of the first week
+  const endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const startDate = new Date(
+    endDate.getTime() - (totalWeeks * 7 - 1) * msPerDay
+  );
+  // Align start to Sunday
+  startDate.setDate(startDate.getDate() - startDate.getDay());
+
+  const dayLabels = ["", "Mon", "", "Wed", "", "Fri", ""];
+
+  // Build grid: weeks × 7 (Sunday=0 ... Saturday=6)
   const grid: number[][] = [];
-  for (let w = 0; w < weeks; w++) {
+  const monthMarks: { weekIdx: number; label: string }[] = [];
+  const months = [
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+  ];
+  let lastMonth = -1;
+
+  for (let w = 0; w < totalWeeks; w++) {
     const col: number[] = [];
-    for (let d = 0; d < days; d++) {
-      const age = weeks - w;
-      let v = Math.random();
-      if (rng() < 0.18) {
-        col.push(0);
-      } else {
-        const bias = age < 8 ? 0.35 : age < 18 ? 0.15 : 0;
-        col.push(Math.floor((v + bias) * 5));
+    for (let d = 0; d < 7; d++) {
+      const date = new Date(startDate.getTime() + (w * 7 + d) * msPerDay);
+      const key = date.toISOString().slice(0, 10);
+      col.push(contributions.get(key) || 0);
+
+      if (d === 0 || (w === 0 && d === 0)) {
+        const month = date.getMonth();
+        if (month !== lastMonth) {
+          monthMarks.push({ weekIdx: w, label: months[month] });
+          lastMonth = month;
+        }
       }
     }
     grid.push(col);
   }
 
-  const monthPositions = [
-    { w: 0, label: "Sep" },
-    { w: 4, label: "Oct" },
-    { w: 9, label: "Nov" },
-    { w: 13, label: "Dec" },
-    { w: 17, label: "Jan" },
-    { w: 22, label: "Feb" },
-    { w: 26, label: "Mar" },
-  ];
+  // Count total contributions
+  let total = 0;
+  for (const count of contributions.values()) total += count;
 
   return (
     <div className="mt-2">
       <div className="text-xs text-muted mb-1">
-        <span className="text-accent-green">contributions</span> in the last half year
+        <span className="text-accent-green">{total} contributions</span> in the
+        last {totalWeeks} weeks
       </div>
+
+      {/* Month labels row */}
+      <div className="flex" style={{ marginLeft: "19px" }}>
+        {monthMarks.map((m, i) => {
+          const prevW = i > 0 ? monthMarks[i - 1].weekIdx : 0;
+          const offset = (m.weekIdx - prevW) * 13;
+          return (
+            <div
+              key={m.label}
+              className="text-[10px] text-[#484f58] shrink-0"
+              style={{
+                width: i === 0 ? "auto" : `${offset}px`,
+                marginLeft: i === 0 ? "0" : undefined,
+              }}
+            >
+              {m.label}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Grid + day labels */}
       <div className="flex gap-[2px]">
-        {dayLabels.map((label, i) => (
-          <div key={`day-${i}`} className="text-[10px] text-[#484f58] w-[15px] text-right pr-0.5 leading-[11px]">
-            {label}
-          </div>
-        ))}
-        <div className="flex gap-[2px] ml-0.5">
+        <div className="flex flex-col gap-[2px] mr-0.5">
+          {dayLabels.map((label, i) => (
+            <div
+              key={`day-${i}`}
+              className="text-[10px] text-[#484f58] leading-[11px] h-[11px] flex items-center"
+            >
+              {label}
+            </div>
+          ))}
+        </div>
+        <div className="flex gap-[2px]">
           {grid.map((col, w) => (
             <div key={w} className="flex flex-col gap-[2px]">
               {col.map((level, d) => (
                 <div
                   key={`${w}-${d}`}
                   className={`w-[11px] h-[11px] ${greenShades[level] || greenShades[0]}`}
-                  title={`${level} contributions`}
+                  title={`${level} on ${new Date(startDate.getTime() + (w * 7 + d) * msPerDay).toISOString().slice(0, 10)}`}
                 />
               ))}
             </div>
           ))}
         </div>
       </div>
-      <div className="flex gap-[2px] mt-0.5">
-        <div className="w-[15px]" />
-        {monthPositions.map((m) => (
-          <div
-            key={m.label}
-            className="text-[10px] text-[#484f58]"
-            style={{ marginLeft: m.w === 0 ? 0 : `${m.w * 13 - (monthPositions[monthPositions.indexOf(m) - 1]?.w || 0) * 13}px` }}
-          >
-            {m.label}
-          </div>
-        ))}
-      </div>
+
       <div className="flex items-center gap-1 mt-1 text-[10px] text-[#484f58]">
         <span>Less</span>
         {greenShades.map((shade, i) => (
@@ -267,7 +315,11 @@ function ContributionGraph() {
   );
 }
 
-function NeoFetch() {
+function NeoFetch({
+  contributions,
+}: {
+  contributions: Map<string, number>;
+}) {
   const now = new Date();
   const uptime = Math.floor(
     (now.getTime() - new Date("2005-01-10").getTime()) / 31556952000
@@ -324,7 +376,7 @@ function NeoFetch() {
         ))}
       </div>
 
-      <ContributionGraph />
+      <ContributionGraph contributions={contributions} />
     </div>
   );
 }
@@ -361,6 +413,8 @@ export function Terminal({
   posts: Post[];
   moments: Moment[];
 }) {
+  const contributions = useRef(buildContributions(posts, moments));
+
   const [lines, setLines] = useState<OutputLine[]>([
     {
       type: "output",
@@ -373,7 +427,7 @@ export function Terminal({
         </div>
       ),
     },
-    { type: "output", content: NeoFetch() },
+    { type: "output", content: NeoFetch({ contributions: contributions.current }) },
     {
       type: "output",
       content: (
@@ -467,7 +521,7 @@ export function Terminal({
           break;
         }
         case "neofetch": {
-          newLines.push({ type: "output", content: NeoFetch() });
+          newLines.push({ type: "output", content: NeoFetch({ contributions: contributions.current }) });
           break;
         }
         case "clear": {
