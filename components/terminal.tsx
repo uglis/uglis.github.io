@@ -158,7 +158,8 @@ const HELP = `Available commands:
   banner        Print the UGLIS banner
   ls [path]     List directory contents
   cat <file>    Print file contents
-  cd <dir>      Change current directory
+  vim <file>    Open file in vim (q or Esc to quit)
+  cd <dir>      Change directory
   pwd           Print working directory
   clear         Clear terminal
   date          Show current date
@@ -168,7 +169,8 @@ const HELP = `Available commands:
 Tips:
   - Tab to autocomplete paths
   - ↑/↓ to browse command history
-  - Try: cat about.md | cat projects.toml | cd posts/ | ls`;
+  - Use .. to go up a directory
+  - Try: vim about.md | cd posts/ | ls -la`;
 
 function NeoFetch() {
   const now = new Date();
@@ -253,6 +255,10 @@ export function Terminal({
   const [cwd, setCwd] = useState("/");
   const [cmdHistory, setCmdHistory] = useState<string[]>([]);
   const [historyIdx, setHistoryIdx] = useState(-1);
+  const [vimFile, setVimFile] = useState<{
+    name: string;
+    content: string;
+  } | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -275,6 +281,18 @@ export function Terminal({
     scrollBottom();
     inputRef.current?.focus();
   }, [lines, scrollBottom]);
+
+  useEffect(() => {
+    if (!vimFile) return;
+    const handler = (e: globalThis.KeyboardEvent) => {
+      if (e.key === "Escape" || e.key === "q") {
+        setVimFile(null);
+        setTimeout(() => inputRef.current?.focus(), 50);
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [vimFile]);
 
   const exec = useCallback(
     (raw: string) => {
@@ -412,25 +430,75 @@ export function Terminal({
             });
             break;
           }
-          const filePath = resolvePath(cwd, args[0]);
-          const node = getNode(fs.current, filePath);
-          if (!node) {
+          const catPath = resolvePath(cwd, args[0]);
+          const catNode = getNode(fs.current, catPath);
+          if (!catNode) {
             newLines.push({
               type: "error",
               content: `cat: no such file: ${args[0]}`,
             });
-          } else if (node.type === "dir") {
+          } else if (catNode.type === "dir") {
             newLines.push({
               type: "error",
               content: `cat: is a directory: ${args[0]}`,
             });
           } else {
             const content =
-              typeof node.content === "function"
-                ? node.content()
-                : node.content;
+              typeof catNode.content === "function"
+                ? catNode.content()
+                : catNode.content;
             newLines.push({ type: "output", content });
           }
+          break;
+        }
+        case "vim": {
+          if (args.length === 0) {
+            newLines.push({
+              type: "error",
+              content: "vim: missing file operand",
+            });
+            break;
+          }
+          const vimPath = resolvePath(cwd, args[0]);
+          const vimNode = getNode(fs.current, vimPath);
+          if (!vimNode) {
+            newLines.push({
+              type: "error",
+              content: `vim: no such file: ${args[0]}`,
+            });
+          } else if (vimNode.type === "dir") {
+            newLines.push({
+              type: "error",
+              content: `vim: is a directory: ${args[0]}`,
+            });
+          } else {
+            const content =
+              typeof vimNode.content === "function"
+                ? vimNode.content()
+                : vimNode.content;
+            newLines.push({
+              type: "output",
+              content: `Opening ${args[0]} in vim...`,
+            });
+            addLines(newLines);
+            setVimFile({ name: args[0], content });
+            return;
+          }
+          break;
+        }
+        case ".": {
+          if (args.length > 0) {
+            // treat as relative path execution attempt
+            newLines.push({
+              type: "error",
+              content: `command not found: ${trimmed}`,
+            });
+          }
+          // cd . is a no-op, just don't error
+          break;
+        }
+        case "..": {
+          setCwd(resolvePath(cwd, ".."));
           break;
         }
         default: {
@@ -540,6 +608,65 @@ export function Terminal({
           <span className="w-[8px] h-[1em] bg-accent-green animate-pulse shrink-0" />
         </div>
       </div>
+
+      {/* Vim modal */}
+      {vimFile && (
+        <div className="fixed inset-0 z-50 bg-[#0d1117] flex flex-col font-mono">
+          {/* Vim header - file tabs */}
+          <div className="flex items-center gap-2 px-4 py-2 bg-[#161b22] border-b border-[#30363d] text-xs text-muted">
+            <span>1</span>
+            <span className="text-accent-green">{vimFile.name}</span>
+          </div>
+
+          {/* Vim body - content with line numbers */}
+          <div className="flex-1 overflow-y-auto px-2 py-1 text-sm leading-6">
+            {vimFile.content.split("\n").map((line, i) => (
+              <div key={i} className="flex">
+                <span className="text-[#484f58] select-none w-[36px] text-right mr-4 shrink-0">
+                  {i + 1}
+                </span>
+                <span className="text-[#e6edf3] whitespace-pre-wrap">
+                  {line || " "}
+                </span>
+              </div>
+            ))}
+            {/* Fill remaining space with ~ */}
+            {Array.from({
+              length: Math.max(
+                0,
+                20 - vimFile.content.split("\n").length
+              ),
+            }).map((_, i) => (
+              <div key={`tilde-${i}`} className="flex">
+                <span className="text-[#484f58] select-none w-[36px] text-right mr-4 shrink-0">
+                  {vimFile.content.split("\n").length + i + 1}
+                </span>
+                <span className="text-[#1c2128]">~</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Vim status bar */}
+          <div className="flex items-center justify-between px-4 py-1.5 bg-[#161b22] border-t border-[#30363d] text-xs">
+            <span>
+              <span className="text-accent-green font-bold">
+                &quot;{vimFile.name}&quot;
+              </span>{" "}
+              <span className="text-muted">[readonly]</span>{" "}
+              <span className="text-[#484f58]">
+                {vimFile.content.split("\n").length}L,{" "}
+                {vimFile.content.length}B
+              </span>
+            </span>
+            <span>
+              <span className="text-accent-green font-bold">-- NORMAL --</span>
+              <span className="text-muted ml-2">
+                :q  Esc  quit
+              </span>
+            </span>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
