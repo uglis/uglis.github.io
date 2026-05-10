@@ -11,8 +11,6 @@ tags:
   - 嵌入式
 ---
 
-# Orin2 降级刷 JetPack 5.1.5 教程
-
 更新时间：2026-05-09
 
 本文目标：用一台 `x86_64 Ubuntu 20.04` 主机，把第二台 Jetson Orin 从当前 `JetPack 6.2` 降级刷到和第一台 Orin 尽量一致的 `JetPack 5.1.5`，用于后续 FASNRC 三端链路中尽量降低 Orin-1 编码与 Orin-2 解码环境差异。
