@@ -172,11 +172,32 @@ Tips:
   - Use .. to go up a directory
   - Try: vim about.md | cd posts/ | ls -la`;
 
+const NEOF_LOGO = [
+  "        ▄▄▄     ",
+  "        ███     ",
+  "   ▄▄█████▄▄   ",
+  " ▄███████████▄ ",
+  " ██▀ ▄██▄ ▀██ ",
+  " █▌  ████  ▐█ ",
+  "     ▀  ▀     ",
+];
+
 function NeoFetch() {
   const now = new Date();
   const uptime = Math.floor(
     (now.getTime() - new Date("2005-01-10").getTime()) / 31556952000
   );
+
+  const info = [
+    { label: "OS", value: "NJU CS Undergraduate '27" },
+    { label: "Shell", value: "/bin/zsh" },
+    { label: "Uptime", value: `${uptime} years` },
+    { label: "Location", value: "Nanjing, China" },
+    { label: "Editor", value: "VS Code / Vim" },
+    { label: "Languages", value: "C, Python, Go, TypeScript" },
+    { label: "MBTI", value: "INFP" },
+    { label: "Hobbies", value: "书法, 阅读" },
+  ];
 
   const colorBlocks = [
     "#0d1117", "#161b22", "#30363d", "#484f58", "#6e7681",
@@ -185,28 +206,62 @@ function NeoFetch() {
     "#a371f7", "#db61a2", "#f0883e", "#2ea043",
   ];
 
+  const maxLabelLen = Math.max(...info.map((i) => i.label.length));
+
   return (
-    <div className="font-mono text-xs leading-tight">
-      <pre className="text-accent-green my-1">{BANNER}</pre>
-      <div className="my-1">
-        <div>  ┌──────────────────────────────────┐</div>
-        <div>  │  <span className="text-accent-green">uglis@home</span>                      │</div>
-        <div>  │  ─────────────────────────────── │</div>
-        <div>  │  OS: NJU CS Undergraduate &apos;27    │</div>
-        <div>  │  Shell: /bin/zsh                 │</div>
-        <div>  │  Uptime: {uptime} years                  │</div>
-        <div>  │  Location: Nanjing, China        │</div>
-        <div>  │  Editor: VS Code / Vim           │</div>
-        <div>  │  Languages: C, Python, Go, TS    │</div>
-        <div>  │  MBTI: INFP                      │</div>
-        <div>  │  Hobbies: 书法, 阅读              │</div>
-        <div>  └──────────────────────────────────┘</div>
+    <div className="font-mono text-xs leading-snug">
+      {/* Header: logo + user@host */}
+      <div className="flex gap-4">
+        <div className="text-accent shrink-0 leading-tight">
+          {NEOF_LOGO.map((line, i) => (
+            <div key={i} className="whitespace-pre">{line}</div>
+          ))}
+        </div>
+        <div>
+          <div>
+            <span className="text-accent-green font-bold">uglis</span>
+            <span className="text-accent">@</span>
+            <span className="text-accent-green font-bold">home</span>
+          </div>
+          <div className="text-muted">
+            {"─".repeat(maxLabelLen + 12)}
+          </div>
+        </div>
       </div>
-      <div className="flex gap-0.5 mt-1">
+
+      {/* Info lines: logo left, info right */}
+      {info.map((item, i) => (
+        <div key={i} className="flex mt-0.5">
+          <div className="text-accent shrink-0 leading-tight w-[72px]">
+            {NEOF_LOGO[i] ? (
+              <span className="whitespace-pre">{NEOF_LOGO[i]}</span>
+            ) : (
+              <span className="whitespace-pre">{' '.repeat(13)}</span>
+            )}
+          </div>
+          <div>
+            <span className="text-accent font-bold">
+              {item.label.padStart(maxLabelLen)}
+            </span>
+            <span className="text-muted">: </span>
+            <span className="text-text">{item.value}</span>
+          </div>
+        </div>
+      ))}
+
+      {/* Remaining logo lines */}
+      {NEOF_LOGO.slice(info.length).map((line, i) => (
+        <div key={`logo-${i}`} className="flex leading-tight">
+          <span className="text-accent whitespace-pre">{line}</span>
+        </div>
+      ))}
+
+      {/* Color blocks */}
+      <div className="flex gap-0.5 mt-2 ml-[72px]">
         {colorBlocks.map((color, i) => (
           <span
             key={i}
-            className="w-3 h-3 inline-block rounded-sm"
+            className="w-3 h-3 inline-block"
             style={{ backgroundColor: color }}
           />
         ))}
@@ -248,8 +303,31 @@ export function Terminal({
   moments: Moment[];
 }) {
   const [lines, setLines] = useState<OutputLine[]>([
+    {
+      type: "output",
+      content: (
+        <div className="text-xs text-muted mb-1">
+          Welcome to <span className="text-accent-green">uglis@home</span>!
+          This is 林方浩&apos;s personal homepage, powered by a fully
+          interactive terminal. Everything you see is command-driven — no
+          buttons, no scrolling galleries. Just type.
+        </div>
+      ),
+    },
     { type: "output", content: NeoFetch() },
-    { type: "output", content: 'Type "help" to get started.' },
+    {
+      type: "output",
+      content: (
+        <div className="mt-1">
+          <span className="text-accent-green">$ </span>
+          <span className="text-muted">
+            Type{" "}
+            <span className="text-accent font-bold">help</span>{" "}
+            to see what you can do.
+          </span>
+        </div>
+      ),
+    },
   ]);
   const [input, setInput] = useState("");
   const [cwd, setCwd] = useState("/");
@@ -325,7 +403,10 @@ export function Terminal({
           });
           break;
         }
-        case "banner":
+        case "banner": {
+          newLines.push({ type: "output", content: <pre className="text-accent-green my-1 text-xs">{BANNER}</pre> });
+          break;
+        }
         case "neofetch": {
           newLines.push({ type: "output", content: NeoFetch() });
           break;
