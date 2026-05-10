@@ -15,7 +15,7 @@ export default function AdminPage() {
       return;
     }
     w.document.write(
-      `<pre style="white-space:pre-wrap;font-family:ui-monospace,monospace;line-height:1.6;padding:24px;">${content
+      `<pre style="white-space:pre-wrap;font-family:monospace;line-height:1.6;padding:24px;background:#0d1117;color:#e6edf3;">${content
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")}</pre>`
@@ -25,20 +25,15 @@ export default function AdminPage() {
 
   const handlePublish = async () => {
     if (!file.startsWith("posts/")) {
-      setStatus({
-        message: "文件路径必须以 posts/ 开头",
-        type: "error",
-      });
+      setStatus({ message: "ERROR: path must start with posts/", type: "error" });
       return;
     }
     if (!content.trim()) {
-      setStatus({ message: "Markdown 内容不能为空", type: "error" });
+      setStatus({ message: "ERROR: content cannot be empty", type: "error" });
       return;
     }
-
     setLoading(true);
-    setStatus({ message: "发布中...", type: "" });
-
+    setStatus({ message: "publishing...", type: "" });
     try {
       const res = await fetch("/api/publish", {
         method: "POST",
@@ -46,13 +41,11 @@ export default function AdminPage() {
         body: JSON.stringify({ file, content }),
       });
       const data = await res.json();
-      if (!res.ok || !data.ok) {
-        throw new Error(data.error || "发布失败");
-      }
-      setStatus({ message: `发布成功：${data.slug}`, type: "ok" });
+      if (!res.ok || !data.ok) throw new Error(data.error || "publish failed");
+      setStatus({ message: `OK: published ${data.slug}`, type: "ok" });
     } catch (err) {
       setStatus({
-        message: `发布失败：${err instanceof Error ? err.message : "未知错误"}`,
+        message: `ERROR: ${err instanceof Error ? err.message : "unknown"}`,
         type: "error",
       });
     } finally {
@@ -62,79 +55,91 @@ export default function AdminPage() {
 
   return (
     <>
-      <section className="panel border border-line rounded-2xl bg-surface p-[clamp(22px,3.6vw,38px)]">
-        <div className="flex justify-between items-baseline gap-3">
-          <p className="m-0 text-[0.78rem] tracking-[0.2em] text-accent-2">
-            ADMIN
-          </p>
-          <h1 className="font-serif">Markdown 发布</h1>
+      <section className="terminal-window mb-3">
+        <div className="terminal-header">
+          <span className="terminal-dot red" />
+          <span className="terminal-dot yellow" />
+          <span className="terminal-dot green" />
+          <span className="terminal-title">uglis@home:~/admin</span>
         </div>
-        <p className="text-muted leading-[1.84]">
-          本地编写 Markdown 文章，发布到博客。
-        </p>
+        <div className="terminal-body">
+          <div className="cmd-line">
+            <span className="cmd-prompt">$ </span>
+            <span className="cmd-command">./publish.sh</span>
+          </div>
+          <div className="cmd-output text-xs text-muted">
+            write markdown with frontmatter, then POST /api/publish
+          </div>
+        </div>
       </section>
 
-      <section className="panel mt-4 border border-line rounded-2xl bg-surface p-[clamp(22px,3.6vw,38px)] grid gap-3">
-        <div className="grid grid-cols-2 gap-[10px] max-[900px]:grid-cols-1">
-          <div className="grid gap-[6px]">
-            <label className="text-text text-[0.9rem] font-semibold" htmlFor="md-file">
-              Markdown 文件路径（必须以 posts/ 开头）
+      <section className="terminal-window">
+        <div className="terminal-header">
+          <span className="terminal-dot red" />
+          <span className="terminal-dot yellow" />
+          <span className="terminal-dot green" />
+          <span className="terminal-title">editor</span>
+        </div>
+        <div className="terminal-body grid gap-3">
+          <div>
+            <label className="text-xs text-muted block mb-1 font-mono" htmlFor="md-file">
+              $ file_path
             </label>
             <input
               id="md-file"
-              className="border border-line rounded-xl bg-[rgba(10,14,24,0.72)] text-text py-[10px] px-3 outline-none focus-visible:outline-2 focus-visible:outline-accent"
+              className="w-full border border-line rounded bg-bg-alt text-text py-2 px-3 text-sm font-mono outline-none focus:border-accent"
               type="text"
               value={file}
               onChange={(e) => setFile(e.target.value)}
             />
           </div>
-        </div>
 
-        <div className="grid gap-[6px]">
-          <label className="text-text text-[0.9rem] font-semibold" htmlFor="md-content">
-            Markdown 内容
-          </label>
-          <textarea
-            id="md-content"
-            className="border border-line rounded-xl bg-[rgba(10,14,24,0.72)] text-text py-[10px] px-3 outline-none focus-visible:outline-2 focus-visible:outline-accent min-h-[48vh] resize-y leading-relaxed"
-            spellCheck={false}
-            placeholder="在这里写 Markdown，包括 frontmatter"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-          />
-        </div>
+          <div>
+            <label className="text-xs text-muted block mb-1 font-mono" htmlFor="md-content">
+              $ cat &gt;&gt; {file} &lt;&lt; &apos;EOF&apos;
+            </label>
+            <textarea
+              id="md-content"
+              className="w-full border border-line rounded bg-bg-alt text-text py-3 px-3 text-sm font-mono outline-none focus:border-accent min-h-[50vh] resize-y leading-relaxed"
+              spellCheck={false}
+              placeholder="write markdown with frontmatter..."
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+            />
+          </div>
 
-        <div className="flex gap-3 flex-wrap mt-3">
-          <button
-            type="button"
-            className="no-underline rounded-full px-5 py-[11px] border border-transparent cursor-pointer bg-[linear-gradient(120deg,var(--color-accent),#d1ebff)] text-[#081522] transition-transform hover:-translate-y-0.5 disabled:opacity-50"
-            onClick={handlePublish}
-            disabled={loading}
-          >
-            发布文章
-          </button>
-          <button
-            type="button"
-            className="no-underline rounded-full px-5 py-[11px] border border-line text-text cursor-pointer transition-transform hover:-translate-y-0.5"
-            onClick={handlePreview}
-          >
-            预览到新窗口
-          </button>
-        </div>
+          <div className="flex gap-3 flex-wrap">
+            <button
+              type="button"
+              className="text-xs font-mono px-4 py-2 rounded bg-accent-green/10 border border-accent-green text-accent-green cursor-pointer hover:bg-accent-green/20 transition-colors disabled:opacity-50"
+              onClick={handlePublish}
+              disabled={loading}
+            >
+              $ ./publish.sh
+            </button>
+            <button
+              type="button"
+              className="text-xs font-mono px-4 py-2 rounded border border-line text-muted cursor-pointer hover:text-text hover:border-muted transition-colors"
+              onClick={handlePreview}
+            >
+              $ preview
+            </button>
+          </div>
 
-        {status.message && (
-          <p
-            className={`m-0 min-h-[1.3em] ${
-              status.type === "ok"
-                ? "text-accent-2"
-                : status.type === "error"
-                  ? "text-[#ff8a8a]"
-                  : "text-muted"
-            }`}
-          >
-            {status.message}
-          </p>
-        )}
+          {status.message && (
+            <p
+              className={`text-xs font-mono m-0 ${
+                status.type === "ok"
+                  ? "text-accent-green"
+                  : status.type === "error"
+                    ? "text-accent-red"
+                    : "text-muted"
+              }`}
+            >
+              {status.message}
+            </p>
+          )}
+        </div>
       </section>
     </>
   );

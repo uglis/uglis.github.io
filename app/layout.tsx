@@ -6,11 +6,11 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "Fanghao Lin · Personal Website",
-    template: "%s · Fanghao Lin",
+    default: "uglis@home:~",
+    template: "%s | uglis@home:~",
   },
   description:
-    "林方浩的个人主页：我在各种悲喜交集处，能做的只是长途跋涉的归真反璞",
+    "林方浩的个人主页 — CLI-style geek portfolio",
 };
 
 export default function RootLayout({
@@ -24,24 +24,24 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700&family=Sora:wght@400;600;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap"
           rel="stylesheet"
         />
       </head>
       <body>
         <ThemeProvider>
+          <div className="scanlines" aria-hidden="true" />
+          <div className="crt-glow" aria-hidden="true" />
           <a
-            className="absolute left-[-9999px] top-0 bg-[#d9ffef] text-[#032517] py-[10px] px-[14px] rounded-[10px] z-[999] no-underline focus-visible:left-3 focus-visible:top-3"
+            className="absolute left-[-9999px] top-0 bg-accent-green text-black py-[10px] px-[14px] rounded z-[999] no-underline font-mono text-sm focus-visible:left-3 focus-visible:top-3"
             href="#main-content"
           >
-            跳到主要内容
+            skip to main content
           </a>
-          <div className="bg-grid" aria-hidden="true" />
-          <div className="bg-radial" aria-hidden="true" />
           <Header />
           <main
             id="main-content"
-            className="w-[min(1120px,92vw)] mx-auto my-[26px] mb-[60px] mt-[22px]"
+            className="w-[min(1000px,94vw)] mx-auto my-6 mb-16"
           >
             {children}
           </main>

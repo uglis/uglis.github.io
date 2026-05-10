@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import { getAllMoments } from "@/lib/moments";
-import { ScrollReveal } from "@/components/scroll-reveal";
 import { MomentsList } from "../moments.client";
 
 export const metadata: Metadata = {
-  title: "动态",
-  description: "林方浩的 moments 动态分享页",
+  title: "moments",
+  description: "动态时间线",
 };
 
 export const dynamic = "force-static";
@@ -16,25 +15,35 @@ export default async function MomentsPage() {
 
   return (
     <>
-      <ScrollReveal>
-        <section className="panel border border-line rounded-2xl bg-surface p-[clamp(22px,3.6vw,38px)]">
-          <div className="flex justify-between items-baseline gap-3">
-            <p className="m-0 text-[0.78rem] tracking-[0.2em] text-accent-2">
-              MOMENTS
-            </p>
-            <h1 className="font-serif">动态</h1>
+      <section className="terminal-window mb-3">
+        <div className="terminal-header">
+          <span className="terminal-dot red" />
+          <span className="terminal-dot yellow" />
+          <span className="terminal-dot green" />
+          <span className="terminal-title">uglis@home:~/moments</span>
+        </div>
+        <div className="terminal-body">
+          <div className="cmd-line">
+            <span className="cmd-prompt">$ </span>
+            <span className="cmd-command">cat moments.jsonl</span>
           </div>
-          <p className="text-muted leading-[1.84]">
-            这里是完整的 moments 时间线，记录音乐和生活碎片。
-          </p>
-        </section>
-      </ScrollReveal>
+          <div className="cmd-output">
+            total {moments.length} moments
+          </div>
+        </div>
+      </section>
 
-      <ScrollReveal delay={100}>
-        <section className="panel mt-4 border border-line rounded-2xl bg-surface p-[clamp(22px,3.6vw,38px)]">
+      <section className="terminal-window">
+        <div className="terminal-header">
+          <span className="terminal-dot red" />
+          <span className="terminal-dot yellow" />
+          <span className="terminal-dot green" />
+          <span className="terminal-title">stdout</span>
+        </div>
+        <div className="terminal-body">
           <MomentsList moments={moments} mode="full" />
-        </section>
-      </ScrollReveal>
+        </div>
+      </section>
     </>
   );
 }
