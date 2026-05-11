@@ -61,7 +61,7 @@ export function GlassCard({
           ? `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px) scale(1.02)`
           : "perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0) scale(1)",
         borderColor: active
-          ? "rgba(255,255,255,0.2)"
+          ? "rgba(203,166,247,0.3)"
           : undefined,
       }}
     >
@@ -74,7 +74,7 @@ export function GlassCard({
           <div
             className="absolute inset-0 opacity-60 transition-[background] duration-200"
             style={{
-              background: `radial-gradient(circle 200px at ${px}% ${py}%, rgba(255,255,255,0.08), transparent 70%)`,
+              background: `radial-gradient(circle 200px at ${px}% ${py}%, rgba(203,166,247,0.1), rgba(180,190,254,0.05), transparent 70%)`,
             }}
           />
         </div>
@@ -90,8 +90,8 @@ export function GlassCard({
             className="absolute inset-0 rounded-2xl"
             style={{
               background: `
-                radial-gradient(circle 150px at ${px}% 0%, rgba(255,255,255,0.08), transparent),
-                radial-gradient(circle 150px at ${px}% 100%, rgba(255,255,255,0.04), transparent)
+                radial-gradient(circle 150px at ${px}% 0%, rgba(203,166,247,0.1), transparent),
+                radial-gradient(circle 150px at ${px}% 100%, rgba(137,180,250,0.06), transparent)
               `,
             }}
           />
