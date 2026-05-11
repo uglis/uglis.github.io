@@ -198,11 +198,11 @@ function ContributionGraph({
   contributions: Map<string, number>;
 }) {
   const greenShades = [
-    "bg-[#1e1e2e]",
-    "bg-[#333c2d]",
-    "bg-[#4d6640]",
-    "bg-[#6b9954]",
-    "bg-[#a6e3a1]",
+    "contrib-0",
+    "contrib-1",
+    "contrib-2",
+    "contrib-3",
+    "contrib-4",
   ];
 
   const msPerDay = 86400000;
