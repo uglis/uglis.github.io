@@ -268,7 +268,7 @@ function ContributionGraph({
       </div>
 
       {/* Month labels row */}
-      <div className="text-[10px] text-[#484f58] relative h-[14px]" style={{ marginLeft: "32px" }}>
+      <div className="text-[10px] text-[#585b70] relative h-[14px]" style={{ marginLeft: "32px" }}>
         {monthMarks.map((m) => (
           <div
             key={m.label}
