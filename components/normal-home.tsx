@@ -13,8 +13,13 @@ function GlassCard({
 }) {
   return (
     <div
-      className={`rounded-2xl border border-white/[0.08] bg-white/[0.03] backdrop-blur-2xl p-6 sm:p-8
-        ${hover ? "hover:bg-white/[0.06] hover:border-white/[0.14] transition-all duration-300 hover:-translate-y-0.5" : ""}
+      className={`relative rounded-2xl p-6 sm:p-8
+        bg-gradient-to-br from-white/[0.08] via-white/[0.04] to-transparent
+        backdrop-blur-3xl
+        border border-white/[0.12] border-b-white/[0.06]
+        shadow-[0_8px_32px_rgba(0,0,0,0.12),inset_0_1px_0_rgba(255,255,255,0.06)]
+        before:absolute before:inset-0 before:rounded-2xl before:bg-gradient-to-b before:from-white/[0.04] before:to-transparent before:pointer-events-none
+        ${hover ? "hover:from-white/[0.12] hover:via-white/[0.06] hover:border-white/[0.18] transition-all duration-300 hover:-translate-y-0.5" : ""}
         ${className}`}
     >
       {children}
@@ -38,11 +43,16 @@ export function NormalHome({
   moments: Moment[];
 }) {
   return (
-    <div className="space-y-5 pb-12">
+    <div className="space-y-5 pb-12 relative">
+      {/* Background orbs for glass effect */}
+      <div className="fixed top-[-200px] left-[-100px] w-[600px] h-[600px] rounded-full bg-[#cba6f7]/[0.06] blur-[120px] pointer-events-none" />
+      <div className="fixed bottom-[-200px] right-[-100px] w-[500px] h-[500px] rounded-full bg-[#89b4fa]/[0.06] blur-[120px] pointer-events-none" />
+      <div className="fixed top-[40%] left-[30%] w-[400px] h-[400px] rounded-full bg-[#a6e3a1]/[0.04] blur-[100px] pointer-events-none" />
+
       {/* Hero */}
       <GlassCard className="relative overflow-hidden">
-        <div className="absolute top-[-120px] right-[-100px] w-[400px] h-[400px] rounded-full bg-[#89b4fa]/[0.06] blur-3xl pointer-events-none" />
-        <div className="absolute bottom-[-80px] left-[-80px] w-[300px] h-[300px] rounded-full bg-[#a6e3a1]/[0.04] blur-3xl pointer-events-none" />
+        <div className="absolute top-[-120px] right-[-100px] w-[400px] h-[400px] rounded-full bg-[#89b4fa]/[0.08] blur-3xl pointer-events-none" />
+        <div className="absolute bottom-[-80px] left-[-80px] w-[300px] h-[300px] rounded-full bg-[#a6e3a1]/[0.05] blur-3xl pointer-events-none" />
 
         <div className="relative">
           <p className="text-[10px] sm:text-[11px] tracking-[0.2em] text-[#89b4fa]/80 font-mono mb-4">
