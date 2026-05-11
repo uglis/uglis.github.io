@@ -281,7 +281,7 @@ function ContributionGraph({
       </div>
 
       {/* Grid + day labels */}
-      <div className="flex gap-[2px]">
+      <div className="flex gap-[2px] overflow-x-auto pb-1">
         <div className="flex flex-col gap-[2px] mr-0.5">
           {dayLabels.map((label, i) => (
             <div
@@ -757,7 +757,7 @@ export function Terminal({
   };
 
   return (
-    <section className="terminal-window h-[85vh] flex flex-col">
+    <section className="terminal-window h-[80vh] sm:h-[85vh] flex flex-col">
       <div className="terminal-header shrink-0">
         <span className="terminal-dot red" />
         <span className="terminal-dot yellow" />
@@ -769,7 +769,7 @@ export function Terminal({
 
       <div
         ref={containerRef}
-        className="terminal-body flex-1 overflow-y-auto font-mono text-sm leading-relaxed"
+        className="terminal-body flex-1 overflow-y-auto font-mono text-[13px] sm:text-sm leading-relaxed"
         onClick={() => inputRef.current?.focus()}
       >
         {lines.map((line, i) => (
