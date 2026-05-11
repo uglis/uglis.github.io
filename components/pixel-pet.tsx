@@ -1,9 +1,10 @@
 // Auto-generated pixel art: 32x32, 566 dots
 // Scale: 1 dot = 3px, 10 colors
+// Effective area: 96x96 px
 
 export function PixelPet() {
   return (
-    <div className="relative w-0 h-0">
+    <div className="relative" style={{ width: 96, height: 96 }}>
       <div
         className="absolute"
         style={{
