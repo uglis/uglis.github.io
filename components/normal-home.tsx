@@ -41,11 +41,11 @@ export function NormalHome({
     <div className="space-y-5 pb-12">
       {/* Hero */}
       <GlassCard className="relative overflow-hidden">
-        <div className="absolute top-[-120px] right-[-100px] w-[400px] h-[400px] rounded-full bg-blue-500/[0.06] blur-3xl pointer-events-none" />
-        <div className="absolute bottom-[-80px] left-[-80px] w-[300px] h-[300px] rounded-full bg-emerald-500/[0.04] blur-3xl pointer-events-none" />
+        <div className="absolute top-[-120px] right-[-100px] w-[400px] h-[400px] rounded-full bg-[#89b4fa]/[0.06] blur-3xl pointer-events-none" />
+        <div className="absolute bottom-[-80px] left-[-80px] w-[300px] h-[300px] rounded-full bg-[#a6e3a1]/[0.04] blur-3xl pointer-events-none" />
 
         <div className="relative">
-          <p className="text-[10px] sm:text-[11px] tracking-[0.2em] text-blue-400/80 font-mono mb-4">
+          <p className="text-[10px] sm:text-[11px] tracking-[0.2em] text-[#89b4fa]/80 font-mono mb-4">
             LIN FANGHAO &middot; PERSONAL
           </p>
           <h1 className="text-3xl sm:text-5xl font-bold tracking-tight mb-3">
@@ -80,7 +80,7 @@ export function NormalHome({
         {/* Blog posts - takes 2 cols */}
         <div className="lg:col-span-2 space-y-3">
           <div className="flex items-center justify-between px-1">
-            <h2 className="text-sm font-mono tracking-[0.15em] text-blue-400/80">
+            <h2 className="text-sm font-mono tracking-[0.15em] text-[#89b4fa]/80">
               WRITING
             </h2>
             <Link href="/posts" className="text-xs text-white/40 hover:text-white/70 transition-colors no-underline">
@@ -122,7 +122,7 @@ export function NormalHome({
 
         {/* About */}
         <div className="space-y-3">
-          <h2 className="text-sm font-mono tracking-[0.15em] text-blue-400/80 px-1">
+          <h2 className="text-sm font-mono tracking-[0.15em] text-[#89b4fa]/80 px-1">
             ABOUT
           </h2>
 
@@ -161,7 +161,7 @@ export function NormalHome({
               CONTACT
             </h3>
             <div className="space-y-1.5 text-xs">
-              <a href="mailto:231098078@smail.nju.edu.cn" className="block text-blue-400/80 hover:text-blue-400 no-underline transition-colors">
+              <a href="mailto:231098078@smail.nju.edu.cn" className="block text-[#89b4fa]/80 hover:text-blue-400 no-underline transition-colors">
                 231098078@smail.nju.edu.cn
               </a>
               <a href="https://github.com/uglis" target="_blank" rel="noopener noreferrer" className="block text-white/50 hover:text-white/80 no-underline transition-colors">
@@ -174,7 +174,7 @@ export function NormalHome({
 
       {/* Projects */}
       <div className="space-y-3">
-        <h2 className="text-sm font-mono tracking-[0.15em] text-blue-400/80 px-1">
+        <h2 className="text-sm font-mono tracking-[0.15em] text-[#89b4fa]/80 px-1">
           PROJECTS
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -184,7 +184,7 @@ export function NormalHome({
             { tag: "03 · 工程提效", title: "UI System Kit", desc: "统一组件规范与交互准则，减少重复开发" },
           ].map((p) => (
             <GlassCard key={p.tag} hover>
-              <p className="text-[10px] font-mono text-blue-400/60 mb-2">{p.tag}</p>
+              <p className="text-[10px] font-mono text-[#89b4fa]/60 mb-2">{p.tag}</p>
               <h3 className="font-semibold text-sm mb-1.5">{p.title}</h3>
               <p className="text-xs text-white/40 leading-relaxed">{p.desc}</p>
             </GlassCard>
@@ -196,7 +196,7 @@ export function NormalHome({
       {moments.length > 0 && (
         <div className="space-y-3">
           <div className="flex items-center justify-between px-1">
-            <h2 className="text-sm font-mono tracking-[0.15em] text-blue-400/80">
+            <h2 className="text-sm font-mono tracking-[0.15em] text-[#89b4fa]/80">
               MOMENTS
             </h2>
             <Link href="/moments" className="text-xs text-white/40 hover:text-white/70 transition-colors no-underline">

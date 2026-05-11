@@ -198,11 +198,11 @@ function ContributionGraph({
   contributions: Map<string, number>;
 }) {
   const greenShades = [
-    "bg-[#161b22]",
-    "bg-[#0e4429]",
-    "bg-[#006d32]",
-    "bg-[#26a641]",
-    "bg-[#39d353]",
+    "bg-[#1e1e2e]",
+    "bg-[#333c2d]",
+    "bg-[#4d6640]",
+    "bg-[#6b9954]",
+    "bg-[#a6e3a1]",
   ];
 
   const msPerDay = 86400000;
@@ -340,10 +340,10 @@ function NeoFetch({
   ];
 
   const colorBlocks = [
-    "#0d1117", "#161b22", "#30363d", "#484f58", "#6e7681",
-    "#8b949e", "#e6edf3", "#ffffff",
-    "#f85149", "#d29922", "#3fb950", "#58a6ff",
-    "#a371f7", "#db61a2", "#f0883e", "#2ea043",
+    "#1e1e2e", "#313244", "#45475a", "#585b70", "#6c7086",
+    "#9399b2", "#cdd6f4", "#ffffff",
+    "#f38ba8", "#fab387", "#a6e3a1", "#89b4fa",
+    "#cba6f7", "#f5c2e7", "#94e2d5", "#b4befe",
   ];
 
   const maxLabelLen = Math.max(...info.map((i) => i.label.length));
