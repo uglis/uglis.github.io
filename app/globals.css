@@ -17,6 +17,21 @@
     SFMono-Regular, monospace;
 }
 
+/* Catppuccin Latte — light theme */
+[data-theme="light"] {
+  --color-bg: #eff1f5;
+  --color-bg-alt: #e6e9ef;
+  --color-surface: rgba(230, 233, 239, 0.92);
+  --color-line: rgba(204, 208, 218, 0.7);
+  --color-text: #4c4f69;
+  --color-muted: #6c6f85;
+  --color-accent: #1e66f5;
+  --color-accent-green: #40a02b;
+  --color-accent-orange: #fe640b;
+  --color-accent-red: #d20f39;
+  --color-accent-purple: #8839ef;
+}
+
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation: none;
@@ -362,4 +377,67 @@ body {
   .terminal-title {
     font-size: 0.65rem;
   }
+}
+
+/* Light mode overrides */
+[data-theme="light"] .scanlines {
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.02) 2px,
+    rgba(0, 0, 0, 0.02) 4px
+  );
+}
+
+[data-theme="light"] .crt-glow {
+  background: radial-gradient(
+    ellipse at center,
+    rgba(30, 102, 245, 0.04) 0%,
+    transparent 70%
+  );
+}
+
+[data-theme="light"] .article-content code {
+  background: var(--color-bg-alt);
+  color: var(--color-accent-red);
+  border-color: var(--color-line);
+}
+
+[data-theme="light"] .article-content pre {
+  background: var(--color-bg-alt);
+}
+
+[data-theme="light"] .article-content pre code {
+  background: transparent;
+  color: var(--color-text);
+}
+
+[data-theme="light"] .lightbox {
+  background: rgba(239, 241, 245, 0.92);
+}
+
+[data-theme="light"] .lightbox-close {
+  background: rgba(204, 208, 218, 0.9);
+  color: var(--color-text);
+  border-color: var(--color-line);
+}
+
+[data-theme="light"] .lightbox-caption {
+  color: var(--color-muted);
+}
+
+[data-theme="light"] .cmd-output {
+  color: var(--color-muted);
+}
+
+[data-theme="light"] .status-bar {
+  border-color: var(--color-line);
+  background: var(--color-bg-alt);
+}
+
+[data-theme="light"] .tag {
+  border-color: var(--color-line);
+  color: var(--color-accent);
+  background: rgba(30, 102, 245, 0.06);
 }
