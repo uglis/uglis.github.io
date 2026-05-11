@@ -441,3 +441,16 @@ body {
   color: var(--color-accent);
   background: rgba(30, 102, 245, 0.06);
 }
+
+/* Contribution graph cells */
+.contrib-0 { background: var(--color-bg); }
+.contrib-1 { background: #a6e3a1; }
+.contrib-2 { background: #6b9954; }
+.contrib-3 { background: #4d6640; }
+.contrib-4 { background: #2d4a22; }
+
+[data-theme="light"] .contrib-0 { background: #e6e9ef; }
+[data-theme="light"] .contrib-1 { background: #a6e3a1; }
+[data-theme="light"] .contrib-2 { background: #6b9954; }
+[data-theme="light"] .contrib-3 { background: #4d6640; }
+[data-theme="light"] .contrib-4 { background: #2d4a22; }
