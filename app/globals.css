@@ -238,18 +238,6 @@ body {
   color: var(--color-accent);
 }
 
-.article-content h1::before {
-  content: "# ";
-  color: var(--color-muted);
-}
-.article-content h2::before {
-  content: "## ";
-  color: var(--color-muted);
-}
-.article-content h3::before {
-  content: "### ";
-  color: var(--color-muted);
-}
 
 .article-content p {
   color: var(--color-text);
