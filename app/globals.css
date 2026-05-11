@@ -141,7 +141,7 @@ body {
 }
 
 .terminal-body {
-  padding: 20px 24px;
+  padding: 14px 14px;
 }
 
 .cmd-line {
@@ -355,4 +355,23 @@ body {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-muted);
+}
+
+@media (min-width: 640px) {
+  .terminal-body {
+    padding: 20px 24px;
+  }
+}
+
+@media (max-width: 639px) {
+  .terminal-window {
+    border-radius: 6px;
+  }
+  .terminal-header {
+    padding: 8px 12px;
+    gap: 5px;
+  }
+  .terminal-title {
+    font-size: 0.65rem;
+  }
 }
