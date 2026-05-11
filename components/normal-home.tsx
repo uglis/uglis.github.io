@@ -1,31 +1,7 @@
 import type { Post } from "@/lib/posts";
 import type { Moment } from "@/lib/moments";
 import Link from "next/link";
-
-function GlassCard({
-  children,
-  className = "",
-  hover = false,
-}: {
-  children: React.ReactNode;
-  className?: string;
-  hover?: boolean;
-}) {
-  return (
-    <div
-      className={`relative rounded-2xl p-6 sm:p-8
-        bg-gradient-to-br from-white/[0.08] via-white/[0.04] to-transparent
-        backdrop-blur-3xl
-        border border-white/[0.12] border-b-white/[0.06]
-        shadow-[0_8px_32px_rgba(0,0,0,0.12),inset_0_1px_0_rgba(255,255,255,0.06)]
-        before:absolute before:inset-0 before:rounded-2xl before:bg-gradient-to-b before:from-white/[0.04] before:to-transparent before:pointer-events-none
-        ${hover ? "hover:from-white/[0.12] hover:via-white/[0.06] hover:border-white/[0.18] transition-all duration-300 hover:-translate-y-0.5" : ""}
-        ${className}`}
-    >
-      {children}
-    </div>
-  );
-}
+import { GlassCard } from "./glass-card";
 
 function GlassTag({ children }: { children: React.ReactNode }) {
   return (
