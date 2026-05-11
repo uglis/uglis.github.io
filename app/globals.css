@@ -454,3 +454,27 @@ body {
 [data-theme="light"] .contrib-2 { background: #6b9954; }
 [data-theme="light"] .contrib-3 { background: #4d6640; }
 [data-theme="light"] .contrib-4 { background: #2d4a22; }
+
+/* Desk pet animations */
+@keyframes pet-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+@keyframes pet-tail {
+  0%, 100% { transform: rotate(-12deg); }
+  25% { transform: rotate(-25deg); }
+  75% { transform: rotate(5deg); }
+}
+@keyframes pet-paw {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+@keyframes pet-shadow {
+  0%, 100% { transform: scaleX(1); opacity: 0.2; }
+  50% { transform: scaleX(0.8); opacity: 0.1; }
+}
+.animate-pet-bob { animation: pet-bob 3s ease-in-out infinite; }
+.animate-pet-tail { animation: pet-tail 1.5s ease-in-out infinite; }
+.animate-pet-paw { animation: pet-paw 4s ease-in-out infinite; }
+.animate-pet-paw-delayed { animation: pet-paw 4s ease-in-out 0.3s infinite; }
+.animate-pet-shadow { animation: pet-shadow 3s ease-in-out infinite; }
