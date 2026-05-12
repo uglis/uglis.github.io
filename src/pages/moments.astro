@@ -1,0 +1,39 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import MomentsList from '../components/MomentsList.astro';
+import { getAllMoments } from '../lib/moments';
+
+const moments = getAllMoments();
+---
+
+<BaseLayout title="moments">
+  <section class="terminal-window">
+    <div class="terminal-header">
+      <span class="terminal-dot red"></span>
+      <span class="terminal-dot yellow"></span>
+      <span class="terminal-dot green"></span>
+      <span class="terminal-title">uglis@home:~/moments</span>
+    </div>
+    <div class="terminal-body">
+      <div class="cmd-line mb-3">
+        <span class="cmd-prompt">$ </span>
+        <span class="cmd-command">cat moments.jsonl</span>
+      </div>
+      <div class="cmd-output">
+        {moments.length} moment{moments.length !== 1 ? 's' : ''} in timeline
+      </div>
+    </div>
+  </section>
+
+  <section class="terminal-window mt-4">
+    <div class="terminal-header">
+      <span class="terminal-dot red"></span>
+      <span class="terminal-dot yellow"></span>
+      <span class="terminal-dot green"></span>
+      <span class="terminal-title">output</span>
+    </div>
+    <div class="terminal-body">
+      <MomentsList moments={moments} mode="full" />
+    </div>
+  </section>
+</BaseLayout>

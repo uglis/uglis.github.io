@@ -1,0 +1,93 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { DeskPet } from '../components/react/DeskPet';
+import '../styles/globals.css';
+
+const { title } = Astro.props;
+const fullTitle = title ? `${title} | uglis@home:~` : 'uglis@home:~';
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <script is:inline>
+      (function(){
+        var t = localStorage.getItem('theme');
+        if (t === 'light' || (!t && matchMedia('(prefers-color-scheme:light)').matches))
+          document.documentElement.dataset.theme = 'light';
+      })();
+    </script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content="林方浩的个人主页 — CLI-style geek portfolio" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="scanlines" aria-hidden="true"></div>
+    <div class="crt-glow" aria-hidden="true"></div>
+    <a
+      class="absolute left-[-9999px] top-0 bg-accent-green text-black py-[10px] px-[14px] rounded z-[999] no-underline font-mono text-sm focus-visible:left-3 focus-visible:top-3"
+      href="#main-content"
+    >
+      skip to main content
+    </a>
+    <Header />
+    <main
+      id="main-content"
+      class="w-[min(1000px,94vw)] mx-auto my-6 mb-16"
+    >
+      <slot />
+    </main>
+    <Footer />
+    <DeskPet client:only="react" />
+    <script>
+      document.querySelectorAll('[data-glass-card]').forEach(function(card) {
+        const spotlight = card.querySelector('.glass-spotlight');
+        const shimmer = card.querySelector('.glass-shimmer');
+        if (!spotlight || !shimmer) return;
+
+        let active = false;
+        let px = 50;
+        let py = 50;
+
+        card.addEventListener('mouseenter', function() {
+          active = true;
+          spotlight.style.opacity = '1';
+          shimmer.style.opacity = '1';
+        });
+
+        card.addEventListener('mouseleave', function() {
+          active = false;
+          px = 50;
+          py = 50;
+          spotlight.style.opacity = '0';
+          shimmer.style.opacity = '0';
+          card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0) scale(1)';
+          card.style.borderColor = '';
+        });
+
+        card.addEventListener('mousemove', function(e) {
+          if (!active) return;
+          const rect = card.getBoundingClientRect();
+          const x = (e.clientX - rect.left) / rect.width;
+          const y = (e.clientY - rect.top) / rect.height;
+          px = x * 100;
+          py = y * 100;
+          const rx = (y - 0.5) * -6;
+          const ry = (x - 0.5) * 6;
+          card.style.transform = 'perspective(1000px) rotateX(' + rx + 'deg) rotateY(' + ry + 'deg) translateY(-4px) scale(1.02)';
+          card.style.borderColor = 'rgba(203,166,247,0.3)';
+          spotlight.style.background = 'radial-gradient(circle 200px at ' + px + '% ' + py + '%, rgba(203,166,247,0.1), rgba(180,190,254,0.05), transparent 70%)';
+          shimmer.style.background = 'radial-gradient(circle 150px at ' + px + '% 0%, rgba(203,166,247,0.1), transparent), radial-gradient(circle 150px at ' + px + '% 100%, rgba(137,180,250,0.06), transparent)';
+        });
+      });
+    </script>
+  </body>
+</html>

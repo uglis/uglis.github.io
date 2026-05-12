@@ -1,0 +1,27 @@
+---
+import ThemeToggle from './react/ThemeToggle';
+---
+
+<header class="w-[min(1000px,94vw)] mx-auto mt-2 sm:mt-4 px-3 sm:px-4 py-2 sm:py-3 flex flex-wrap items-center justify-between border border-line rounded-lg bg-surface backdrop-blur-md sticky top-2 sm:top-3 z-40 gap-y-1.5">
+  <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+    <div class="flex gap-1 sm:gap-[6px]">
+      <span class="terminal-dot red !w-[10px] !h-[10px] sm:!w-[12px] sm:!h-[12px]"></span>
+      <span class="terminal-dot yellow !w-[10px] !h-[10px] sm:!w-[12px] sm:!h-[12px]"></span>
+      <span class="terminal-dot green !w-[10px] !h-[10px] sm:!w-[12px] sm:!h-[12px]"></span>
+    </div>
+    <a
+      href="/"
+      class="text-[11px] sm:text-xs text-muted hover:text-accent-green no-underline tracking-wider truncate max-w-[120px] sm:max-w-none"
+    >
+      uglis@home:~/
+    </a>
+  </div>
+
+  <nav class="flex gap-0.5 sm:gap-1 items-center overflow-x-auto scrollbar-none" aria-label="site nav">
+    <a href="/" class="text-[11px] sm:text-xs text-muted hover:text-accent-green no-underline px-1.5 sm:px-2 py-0.5 sm:py-1 rounded hover:bg-bg-alt transition-colors whitespace-nowrap">index</a>
+    <a href="/posts" class="text-[11px] sm:text-xs text-muted hover:text-accent-green no-underline px-1.5 sm:px-2 py-0.5 sm:py-1 rounded hover:bg-bg-alt transition-colors whitespace-nowrap">posts/</a>
+    <a href="/moments" class="text-[11px] sm:text-xs text-muted hover:text-accent-green no-underline px-1.5 sm:px-2 py-0.5 sm:py-1 rounded hover:bg-bg-alt transition-colors whitespace-nowrap">moments/</a>
+    <span class="text-line mx-0.5 sm:mx-1 text-xs">|</span>
+    <ThemeToggle client:load />
+  </nav>
+</header>

@@ -1,0 +1,65 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import MarkdownBody from '../../components/MarkdownBody.astro';
+import { getAllPosts, getPostBySlug } from '../../lib/posts';
+
+export function getStaticPaths() {
+  const posts = getAllPosts();
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+---
+
+<BaseLayout title={post.title}>
+  <article class="terminal-window">
+    <div class="terminal-header">
+      <span class="terminal-dot red"></span>
+      <span class="terminal-dot yellow"></span>
+      <span class="terminal-dot green"></span>
+      <span class="terminal-title">uglis@home:~/posts/{post.slug}.md</span>
+    </div>
+    <div class="terminal-body">
+      <div class="cmd-line">
+        <span class="cmd-prompt">$ </span>
+        <span class="cmd-command">cat {post.slug}.md</span>
+      </div>
+      <div class="cmd-output">
+        <p class="text-xs text-muted m-0">
+          date: {post.date} &middot; slug: {post.slug}
+        </p>
+      </div>
+
+      <h1 class="text-accent font-mono text-xl mt-4 mb-1">
+        {post.title}
+      </h1>
+
+      {post.tags.length > 0 && (
+        <div class="flex flex-wrap gap-1.5 mb-3">
+          {post.tags.map((tag: string) => (
+            <span class="tag">{tag}</span>
+          ))}
+        </div>
+      )}
+
+      {post.cover && (
+        <img
+          src={post.cover}
+          alt={post.title}
+          class="w-full max-h-[400px] object-contain rounded border border-line mb-3"
+        />
+      )}
+
+      <MarkdownBody content={post.content} />
+    </div>
+  </article>
+
+  <div class="mt-5 text-center">
+    <a href="/posts" class="text-xs font-mono text-muted hover:text-accent-green no-underline transition-colors">
+      &larr; $ cd ../posts
+    </a>
+  </div>
+</BaseLayout>

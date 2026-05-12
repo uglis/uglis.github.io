@@ -1,0 +1,12 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostsFilter from '../../components/react/PostsFilter';
+import { getAllPosts, getAllTags } from '../../lib/posts';
+
+const posts = getAllPosts();
+const allTags = getAllTags();
+---
+
+<BaseLayout title="posts">
+  <PostsFilter client:load posts={posts} allTags={allTags} />
+</BaseLayout>

@@ -1,0 +1,16 @@
+<footer class="w-[min(1000px,94vw)] mx-auto mb-8 text-[0.7rem] text-muted font-mono">
+  <div class="flex items-center justify-between">
+    <span>
+      <span class="text-accent-green">$</span> whoami &mdash; 林方浩
+      &middot; <span id="footer-year">2025</span>
+    </span>
+    <span class="status-bar">
+      <span class="status-dot"></span>
+      online
+    </span>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('footer-year').textContent = new Date().getFullYear();
+</script>

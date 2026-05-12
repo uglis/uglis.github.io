@@ -1,0 +1,26 @@
+---
+const { className = '', hover = false } = Astro.props;
+---
+
+<div
+  data-glass-card
+  class={`relative rounded-2xl p-4 sm:p-6 overflow-hidden
+    bg-gradient-to-br from-white/[0.08] via-white/[0.04] to-transparent
+    backdrop-blur-3xl
+    border border-white/[0.12] border-b-white/[0.06]
+    shadow-[0_8px_32px_rgba(0,0,0,0.12),inset_0_1px_0_rgba(255,255,255,0.06)]
+    before:absolute before:inset-0 before:rounded-2xl before:bg-gradient-to-b before:from-white/[0.04] before:to-transparent before:pointer-events-none
+    ${hover ? 'cursor-pointer' : ''}
+    ${className}`}
+  style={hover ? 'transform: perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0) scale(1); transition: transform 0.5s ease-out, border-color 0.3s;' : ''}
+>
+  {hover && (
+    <>
+      <div class="glass-spotlight absolute inset-0 pointer-events-none z-10 opacity-0 transition-opacity duration-300"></div>
+      <div class="glass-shimmer absolute inset-0 rounded-2xl pointer-events-none z-20 opacity-0 transition-opacity duration-300"></div>
+    </>
+  )}
+  <div class="relative z-30">
+    <slot />
+  </div>
+</div>

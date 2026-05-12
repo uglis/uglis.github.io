@@ -1,0 +1,78 @@
+---
+import type { Moment } from '../lib/moments';
+
+const { moments, mode } = Astro.props as { moments: Moment[]; mode: 'preview' | 'full' };
+
+function esc(s: string) {
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+---
+
+{!moments || moments.length === 0 ? (
+  <div class="text-muted text-sm font-mono">
+    <span class="text-accent-green">$ </span>no moments yet
+  </div>
+) : (
+  <div class="font-mono text-sm">
+    {moments.map((moment, i) => {
+      const hasPhoto = Boolean(moment.photo?.src);
+      const hasMusic = Boolean(moment.music?.url);
+      const lines = (moment.text || '').split('\n');
+
+      if (mode === 'preview') {
+        const preview = moment.text.replace(/\n+/g, ' ').trim();
+        const compact = preview.length > 50 ? `${preview.slice(0, 50)}...` : preview;
+        return (
+          <div class="mb-2 text-muted">
+            <span class="text-accent-green">[{moment.date}]</span>{' '}
+            <span class="text-accent">{'>'}</span> {esc(compact)}
+            {hasPhoto && <span class="text-xs text-muted ml-1">[img]</span>}
+            {hasMusic && <span class="text-xs text-muted ml-1">[music]</span>}
+          </div>
+        );
+      }
+
+      return (
+        <div class="mb-4 border border-line rounded p-3 bg-bg-alt">
+          <div class="text-accent-green text-xs mb-2">
+            {'>>'} {moment.date}
+          </div>
+          {lines.map((line, j) => (
+            <div class="text-text leading-relaxed">
+              {line ? esc(line) : ' '}
+            </div>
+          ))}
+          {hasPhoto && (
+            <img
+              src={moment.photo!.src}
+              alt={moment.photo!.alt || ''}
+              class="w-full max-h-[400px] object-contain rounded border border-line mt-2"
+              loading="lazy"
+            />
+          )}
+          {hasMusic && (
+            <div class="mt-2 text-xs">
+              <span class="text-accent-purple">music</span>{' '}
+              <a
+                href={moment.music!.url}
+                class="link"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {esc(moment.music!.title || 'link')}
+              </a>
+              <span class="text-muted">
+                {' '}via {esc(moment.music!.platform || '')}
+              </span>
+            </div>
+          )}
+        </div>
+      );
+    })}
+  </div>
+)}

@@ -1,0 +1,8 @@
+---
+import { marked } from 'marked';
+
+const { content } = Astro.props;
+const html = marked(content);
+---
+
+<div class="article-content mt-[18px]" set:html={html} />

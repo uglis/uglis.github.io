@@ -1,0 +1,49 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { Terminal } from '../components/react/Terminal';
+import NormalHome from '../components/NormalHome.astro';
+import { getAllPosts } from '../lib/posts';
+import { getAllMoments } from '../lib/moments';
+
+const posts = getAllPosts();
+const moments = getAllMoments();
+---
+
+<BaseLayout title="">
+  <div id="terminal-view">
+    <Terminal client:load posts={posts} moments={moments} />
+  </div>
+  <div id="normal-view" style="display:none">
+    <NormalHome posts={posts} moments={moments} />
+  </div>
+
+  <button
+    id="view-toggle"
+    type="button"
+    class="fixed bottom-6 right-6 z-50 px-3.5 py-2 rounded-full border text-xs font-mono bg-black/40 backdrop-blur-xl border-white/[0.12] text-white/60 hover:bg-black/60 hover:text-white/90 hover:border-white/[0.2] transition-all duration-300 shadow-lg shadow-black/20 cursor-pointer"
+    aria-label="switch view"
+  >
+    □ 普通视图
+  </button>
+</BaseLayout>
+
+<script>
+  const terminalView = document.getElementById('terminal-view')!;
+  const normalView = document.getElementById('normal-view')!;
+  const toggleBtn = document.getElementById('view-toggle')!;
+  let mode = 'terminal';
+
+  toggleBtn.addEventListener('click', () => {
+    if (mode === 'terminal') {
+      terminalView.style.display = 'none';
+      normalView.style.display = '';
+      toggleBtn.textContent = '>_ 终端视图';
+      mode = 'normal';
+    } else {
+      terminalView.style.display = '';
+      normalView.style.display = 'none';
+      toggleBtn.textContent = '□ 普通视图';
+      mode = 'terminal';
+    }
+  });
+</script>
